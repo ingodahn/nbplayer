@@ -34,3 +34,37 @@ function myFunction() {
     navbar.classList.remove("sticky");
   }
 }
+
+//Configuring Player
+let playerConfig={
+  lang: "sage",
+  linked: true,
+  eval: false,
+  hide: ["fullScreen"],
+  execute: false,
+  showRead: true
+}
+//Switching input on/off
+let playerMode={
+  showSage: false,
+  showNotebookInput: true,
+  showSageInput: true
+};
+
+$("#sageLang").change(function() {
+  playerConfig.lang=$("#sageLang").val();
+  alert(playerConfig.lang);
+});
+$("#sageLinked").change(function() {
+  playerConfig.linked=($("#sageLinked").is(':checked'))?true:false;
+  alert(playerConfig.linked);
+});
+$("#sageEval").change(function() {
+  playerConfig.eval=($("#sageEval").is(':checked'))?true:false;
+});
+$("#sageExecute").change(function() {
+  playerConfig.execute=($("#sageExecute").is(':checked'))?true:false;
+});
+$("#sageShowRead").change(function() {
+  playerConfig.showRead=($("#sageShowRead").is(':checked'))?true:false;
+});

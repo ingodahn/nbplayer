@@ -22,7 +22,31 @@
     <body>
         <div id="main">
             <div id="controls">
-                <div id="header">Jupyter Notebook Player</div>
+                <div id="header">Jupyter Notebook Player Settings</div>
+                <p>
+                    <label>Kernel:
+                        <select id="sageLang">
+                            <option value="sage" selected>SageMath</option>
+                            <option value="r">R</option>
+                            <option value="maxima">Maxima</option>
+                            <option value="octave">Octave</option>
+                            <option value="singular">Singular</option>
+                        </select>
+                    </label>
+                    <br/>
+                    <input type="checkbox" id="sageLinked" checked>
+                    <label for="showSage">All cells use same environment</label>
+                    <br/>
+                    <input type="checkbox" id="sageEval">
+                    <label for="sageEval">Cells are automatically evaluated</label>
+                    <br/>
+                    <input type="checkbox" id="sageExecute">
+                    <label for="sageExecute">Start player in execution mode</label>
+                    <br/>
+                    <input type="checkbox" id="sageShowRead" checked>
+                    <label for="sageShowRead">Enable readonly mode in addition to execution mode</label>
+                    <br/>
+                </p>
                 <input type="file" id="file">
             </div>
             <div id="notebook-holder"></div>
