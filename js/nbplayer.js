@@ -16,14 +16,26 @@ function makePlayer () {
   <img src="https://netmath.vcrp.de/downloads/Systeme/css/images/netmath-logo.png" width="45px"
     style="float:right;"></img>
 </div>`);
+  if (! playerConfig.execute) playerConfig.showRead=true;
+  addSagecells();
+  sagecell.makeSagecell({
+    inputLocation: "div.compute",
+    languages: [playerConfig.lang],
+    //languages: sagecell.allLanguages,
+    //languages: ["maxima","sage","singular","r"],
+    evalButtonText: (lang == 'de')?"Ausführen":"Execute",
+    linked: playerConfig.linked,
+    autoeval: playerConfig.eval,
+	  hide: playerConfig.hide
+  });
 }
 
 // Sticky navbar
 window.onscroll = function () {
-  myFunction();
+  scrollFunction();
 };
 // Add the sticky class to the navbar when you reach its scroll position. Remove "sticky" when you leave the scroll position
-function myFunction() {
+function scrollFunction() {
   var navbar = document.getElementById("navbar");
 
   // Get the offset position of the navbar
@@ -44,20 +56,12 @@ let playerConfig={
   execute: false,
   showRead: true
 }
-//Switching input on/off
-let playerMode={
-  showSage: false,
-  showNotebookInput: true,
-  showSageInput: true
-};
 
 $("#sageLang").change(function() {
   playerConfig.lang=$("#sageLang").val();
-  alert(playerConfig.lang);
 });
 $("#sageLinked").change(function() {
   playerConfig.linked=($("#sageLinked").is(':checked'))?true:false;
-  alert(playerConfig.linked);
 });
 $("#sageEval").change(function() {
   playerConfig.eval=($("#sageEval").is(':checked'))?true:false;
@@ -68,3 +72,62 @@ $("#sageExecute").change(function() {
 $("#sageShowRead").change(function() {
   playerConfig.showRead=($("#sageShowRead").is(':checked'))?true:false;
 });
+
+// Transferring input
+let cellInput=".nb-input",cellOutput=".nb-output";
+let codeCell=".nb-code-cell"
+
+function addSagecells() {
+  let cell = `
+  <div class='compute'>
+    <script type='text/x-sage'>1+1</script>
+  </div>`;
+  let scScript='';
+  $(codeCell).each(function () {
+    $(this).append(cell);
+    // commenting out figure commands to avoid character graphics. Octave cells will show only the last graphics
+    scScript = $(this).find(cellInput).text().replace(/figure/g,"% figure");
+    $(this).find('.compute script').text(scScript);
+    $(this).find('.compute').hide();
+  });
+}
+
+// Views
+//Switching input on/off
+let playerMode={
+  showSage: false,
+  showNotebookInput: true,
+  showSageInput: true
+};
+
+function setView () {
+  if (playerMode.showSage) {
+    $(".compute").hide();
+    if (playerMode.showNotebookInput) {
+      $(cellInput).show();
+    }
+    $(cellOutput).show();
+    playerMode.showSage = false;
+    $('#evalWarning').hide();
+  }
+}
+
+function setExecute () {
+  if (! playerMode.showSage) {
+    $(cellInput).hide();
+    $(cellOutput).hide();
+    $(".compute").show();
+    playerMode.showSage = true;
+    $('#evalWarning').show();
+  }
+}
+
+function toggleInput () {
+  if (playerMode.showSage) {
+    $(".compute .sagecell_input").toggle();
+    playerMode.showSageInput = ! playerMode.showSageInput;
+  } else {
+    $(cellInput).toggle();
+    playerMode.showNotebookInput = ! playerMode.showNotebookInput;
+  }
+}
