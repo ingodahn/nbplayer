@@ -1,59 +1,34 @@
-function getBrowserLanguage() {
+function makePlayer () {
+  // Add header lines
   var userLang = navigator.language || navigator.userLanguage;
   var lang = userLang.substring(0,2);
-  return lang;
-}
-
-function makePlayer () {
-
-  $('#controls').remove();
-  $('#footer').remove();
-  makeMenu();
-  if (! playerConfig.execute) playerConfig.showRead=true;
-
-  addSagecells(".nb-code-cell",".nb-input");
-  makeSageCells(playerConfig);
-}
-
-function makeMenu() {
-  var lang=getBrowserLanguage();
-  // Add header lines
   var read=(lang == 'de')?'Lesen':'Read';
   var execute=(lang =='de')?'Ausführen':'Execute';
   var switchMode = (lang == 'de')?'Code ausblenden/einblenden':'Show / Hide Code';
   var seq = (lang == 'de')?'Code-Zellen in der gegebenen Reihenfolge ausführen!':'Execute Cells in the Sequence Given!';
-  var saver=(lang == 'de')?'Speichern':'Save';
-  var playerMenu=`<div id="navbar">
+  $('#controls').remove();
+  $('#footer').remove();
+  $('#main').prepend(`<div id="navbar">
   <a href="#" role="button" id="read-button" class="btn btn-primary" onclick="setView()">`+read+`</button>
   <a href="#" role="button" id="execute-button" class="btn btn-primary" onclick="setExecute()">`+execute+`</a>
   <a href="#" role="button" class="btn btn-primary" onclick="toggleInput()">`+switchMode+`</a>
-  <a href="#" role="button" class="btn btn-primary" onClick="saveHtml()">`+saver+`</a>
   <a id="evalWarning" href="#" role="button" class="btn btn-warning" style="display: none;">`+seq+`</a>
   <img src="https://netmath.vcrp.de/downloads/Systeme/css/images/netmath-logo.png" width="45px"
     style="float:right;"></img>
-  </div>`;
-  $('body').prepend(playerMenu);
-}
-
-function saveHtml() {
-  saveAddSageCells(".nb-code-cell",".sagecell_input,.sagecell_output");
-  var blob = new Blob(['<!DOCTYPE html>\n<html>\n<head>'+
-  $('head').html()+
-  '</head>\n<body>\n<div id="main">'+
-  $('#main').html()+
-  `</div>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script src="https://sagecell.sagemath.org/embedded_sagecell.js"></script>
-  <script src="js/FileSaver.min.js"></script>
-  <script src="js/nbplayer.js"></script>
-  <script>
-    playerConfig=`+JSON.stringify(playerConfig)+`
-    playerMode=`+JSON.stringify(playerMode)+`
-    makeMenu();
-    makeSageCells(playerConfig);
-    launchPlayer();
-  </script>
-  </body></html>`], {type: "text/plain;charset=utf-8"});
+</div>`);
+  if (! playerConfig.execute) playerConfig.showRead=true;
+  addSagecells();
+  sagecell.makeSagecell({
+    inputLocation: "div.compute",
+    languages: [playerConfig.lang],
+    //languages: sagecell.allLanguages,
+    //languages: ["maxima","sage","singular","r"],
+    evalButtonText: (lang == 'de')?"Ausführen":"Execute",
+    linked: playerConfig.linked,
+    autoeval: playerConfig.eval,
+	  hide: playerConfig.hide
+  });
+  var blob = new Blob([$('#main').html()], {type: "text/plain;charset=utf-8"});
   saveAs(blob, "Output.html");
 }
 
@@ -104,59 +79,18 @@ $("#sageShowRead").change(function() {
 let cellInput=".nb-input",cellOutput=".nb-output";
 let codeCell=".nb-code-cell"
 
-function getSageInput(rootNode) {
-  let scScript='';
-  rootNode.find('.CodeMirror-line').each(function () {
-    scScript += $(this).text()+'\n';
-  })
-  return scScript;
-}
-
-function saveAddSageCells(rootNode,delNode) {
-  let cell = `
-  <div class='compute'>
-    <script type='text/x-sage'>1+1</script>
-  </div>`;
-  $(rootNode).each(function () {
-    $(this).append(cell);
-    // commenting out figure commands to avoid character graphics. Octave cells will show only the last graphics
-    //scScript = $(this).find(inNode).text().replace(/figure/g,"% figure");
-    let scScript=getSageInput($(this))
-    $(this).find('.compute script').text(scScript);
-    if (delNode) $(this).find(delNode).remove();
-    $(this).find('.compute').hide();
-  });
-}
-/* addSageCells(
- * rootNode: Selector for node to which cell will be appended - codeCell
- * inNode: Selector for node from which script is taken - cellInput
- )
-*/
-function addSagecells(rootNode,inNode) {
+function addSagecells() {
   let cell = `
   <div class='compute'>
     <script type='text/x-sage'>1+1</script>
   </div>`;
   let scScript='';
-  $(rootNode).each(function () {
+  $(codeCell).each(function () {
     $(this).append(cell);
     // commenting out figure commands to avoid character graphics. Octave cells will show only the last graphics
-    scScript = $(this).find(inNode).text().replace(/figure/g,"% figure");
+    scScript = $(this).find(cellInput).text().replace(/figure/g,"% figure");
     $(this).find('.compute script').text(scScript);
     $(this).find('.compute').hide();
-  });
-}
-
-function makeSageCells(pC) {
-  sagecell.makeSagecell({
-    inputLocation: "div.compute",
-    languages: [pC.lang],
-    //languages: sagecell.allLanguages,
-    //languages: ["maxima","sage","singular","r"],
-    evalButtonText: (getBrowserLanguage() == 'de')?"Ausführen":"Execute",
-    linked: pC.linked,
-    autoeval: pC.eval,
-	  hide: pC.hide
   });
 }
 
@@ -168,15 +102,8 @@ let playerMode={
   showSageInput: true
 };
 
-function launchPlayer () {
-  if (playerMode.showSage) {
-    setExecute();
-  } else {
-    setView();
-  }
-}
-
 function setView () {
+  if (playerMode.showSage) {
     $(".compute").hide();
     if (playerMode.showNotebookInput) {
       $(cellInput).show();
@@ -184,14 +111,17 @@ function setView () {
     $(cellOutput).show();
     playerMode.showSage = false;
     $('#evalWarning').hide();
+  }
 }
 
 function setExecute () {
+  if (! playerMode.showSage) {
     $(cellInput).hide();
     $(cellOutput).hide();
     $(".compute").show();
     playerMode.showSage = true;
     $('#evalWarning').show();
+  }
 }
 
 function toggleInput () {
