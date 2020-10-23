@@ -13,6 +13,8 @@ function makePlayer () {
 
   addSagecells(".nb-code-cell",".nb-input");
   makeSageCells(playerConfig);
+
+  chapterize();
 }
 
 function makeMenu() {
@@ -202,4 +204,23 @@ function toggleInput () {
     $(cellInput).toggle();
     playerMode.showNotebookInput = ! playerMode.showNotebookInput;
   }
+}
+
+// Personalization
+// Preparation
+function chapterize() {
+  console.log('chapterizing');
+  let curCnt=0, curId='';
+  $('.nb-worksheet').children().each(function () {
+    console.log('X');
+    let node=$(this);
+    if (node.find('h2').length) {
+      curCnt++;
+      curId="chapter_"+curCnt;
+      node.addClass(curId+'_heading');
+      node.append( '<a href="#" role="button" id="toggle_'+curId+'" class="btn btn-primary" onclick="$(\'.'+curId+'\').toggle()">Toggle</button>');
+    } else {
+      node.addClass(curId);
+    }
+  })
 }
