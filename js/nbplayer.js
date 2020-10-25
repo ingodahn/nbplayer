@@ -49,8 +49,10 @@ function saveHtml() {
   <script src="js/FileSaver.min.js"></script>
   <script src="js/nbplayer.js"></script>
   <script>
-    playerConfig=`+JSON.stringify(playerConfig)+`
-    playerMode=`+JSON.stringify(playerMode)+`
+    playerConfig=`+JSON.stringify(playerConfig)+`;
+    playerMode=`+JSON.stringify(playerMode)+`;
+    mtin=`+JSON.stringify(mtin)+`;
+    mtout=`+JSON.stringify(mtout)+`;
     makeMenu();
     makeSageCells(playerConfig);
     launchPlayer();
@@ -208,19 +210,85 @@ function toggleInput () {
 
 // Personalization
 // Preparation
+var mtin={},mtout={};
+
 function chapterize() {
-  console.log('chapterizing');
-  let curCnt=0, curId='';
+  let curCnt2=0, curCnt3=0,curId2,curId3;
   $('.nb-worksheet').children().each(function () {
-    console.log('X');
     let node=$(this);
     if (node.find('h2').length) {
-      curCnt++;
-      curId="chapter_"+curCnt;
-      node.addClass(curId+'_heading');
-      node.append( '<a href="#" role="button" id="toggle_'+curId+'" class="btn btn-primary" onclick="$(\'.'+curId+'\').toggle()">Toggle</button>');
+      let heading=node.find('h2').first();
+      //let headline=heading.html();
+      curCnt2++;
+      curCnt3=0;
+      curId2="chapter_"+curCnt2;
+      node.attr('mtheading',curId2);
+      heading.append('<img src="resources/collapse.gif" onclick= "toggleChapter(\''+curId2+'\')">');
+    } else if (node.find('h3').length) {
+      let heading=node.find('h3').first();
+      curCnt3++;
+      curId3=curId2+"_"+curCnt3;
+      node.attr('mtheading',curId3);
+      node.attr('mtchapter',curId2);
+      if (node.find('.mathtrek').length) {
+        let mt=node.find('.mathtrek').first();
+        mtin[curId3]=mt.attr('mtin').split(',').map(x => x.trim());
+        mt.attr('mtout').split(',').map(x => x.trim()).forEach(function (f) {
+          if (f in mtout) {
+            mtout[f].push(curId3);
+          } else {
+            mtout[f]=[curId3]
+          }
+        })
+      }
+      heading.append('<img src="resources/collapse.gif" onclick= "toggleSection(\''+curId3+'\')">');
+      //heading.html('<a role="button" href="javascript:$(\'.'+curId3+'\').toggle()">'+headline+'</a>');
     } else {
-      node.addClass(curId);
+      node.attr('mtchapter',curId2);
+      node.attr('mtsection',curId3);
     }
-  })
+  });
+  console.log(mtout);
+}
+
+function toggleChapter(chapterId) {
+  $('.nb-cell[mtchapter='+chapterId+']').toggle()
+}
+function toggleSection(chapterId) {
+  $('.nb-cell[mtsection='+chapterId+']').toggle()
+}
+
+var definedOps=[];
+
+function isDefined(chapterId) {
+  let inar=mtin[chapterId];
+  for (let i=0;i<inar.length;i++) {
+    if (inar[i] != "" & !definedOps.includes(inar[i])) return false;
+  }
+  return true;
+}
+
+function checkExpandable(chapterId) {
+  let node=$('.'+chapterId+'_heading img').last().first()
+  if (isDefined(chapterId)) {
+    node.show();
+  } else {
+    node.hide();
+  }
+}
+
+function toggleExpand(chapterId) {
+  if ($('.'+chapterId).is(":visible").length) {
+    // The chapter is expanded
+    let cout=mtout[chapterId]
+    $('.'+chapterId).hide();
+    definedOps=definedOps.filter(function(op) {
+      return (!cout.includes(op));
+    })
+  } else {
+    $('.'+chapterId).show();
+    definedOps.concat(mtout[chapterId]);
+  };
+  let i=0;
+  $('.'+chapter_id+'_heading').siblings('.'+chapterId).each(function() {})
 }
