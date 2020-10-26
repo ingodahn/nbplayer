@@ -257,7 +257,7 @@ function checkInterfaceConsistency () {
       let inar=mtin[chapterId];
       for (let i=0; i<inar.length;i++) {
         if (inar[i] != "" & !defOps.includes(inar[i])) {
-          alert("Undefined "+inar[i]+" in "+chapterId);
+          //alert("Undefined "+inar[i]+" in "+chapterId);
           $('.nb-cell[mtsection='+chapterId+']').hide();
           $('.nb-cell[mtchapter='+chapterId+']').hide();
           $(this).find('img').first().hide();
