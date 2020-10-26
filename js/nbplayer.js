@@ -45,8 +45,8 @@ function saveHtml() {
   `</div>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://sagecell.sagemath.org/embedded_sagecell.js"></script>
-  <script src="https://dahn-research.eu/nbplayer/vendor/js/FileSaver.min.js"></script>
-  <script src="https://dahn-research.eu/nbplayer/js/nbplayer.js"></script>
+  <script src="vendor/js/FileSaver.min.js"></script>
+  <script src="js/nbplayer.js"></script>
   <script>
     playerConfig=`+JSON.stringify(playerConfig)+`;
     playerMode=`+JSON.stringify(playerMode)+`;
@@ -214,6 +214,8 @@ function toggleInput () {
 // Personalization
 // Preparation
 var mtin={},mtout={};
+var expandGifUrl="resources/expand.gif";
+var collapsGifUrl="resources/collapse.gif";
 
 function chapterize() {
   let curCnt2=0, curCnt3=0,curId2,curId3;
@@ -227,7 +229,7 @@ function chapterize() {
       curId2="chapter_"+curCnt2;
       node.attr('mtheading',curId2);
       getInterface(node,curId2);
-      heading.append('<img src="https://dahn-research.eu/nbplayer/resources/collapse.gif" onclick= "toggleChapter(\''+curId2+'\')">');
+      heading.append('<img src="resources/collapse.gif" onclick= "toggleChapter(\''+curId2+'\')">');
     } else if (node.find('h3').length) {
       let heading=node.find('h3').first();
       curCnt3++;
@@ -235,7 +237,7 @@ function chapterize() {
       node.attr('mtheading',curId3);
       node.attr('mtchapter',curId2);
       getInterface(node,curId3);
-      heading.append('<img src="https://dahn-research.eu/nbplayer/resources/collapse.gif" onclick= "toggleSection(\''+curId3+'\')">');
+      heading.append('<img src="resources/collapse.gif" onclick= "toggleSection(\''+curId3+'\')">');
     } else {
       node.attr('mtchapter',curId2);
       node.attr('mtsection',curId3);
@@ -260,7 +262,6 @@ function checkInterfaceConsistency () {
       let inar=mtin[chapterId];
       for (let i=0; i<inar.length;i++) {
         if (inar[i] != "" & !defOps.includes(inar[i])) {
-          //alert("Undefined "+inar[i]+" in "+chapterId);
           $('.nb-cell[mtsection='+chapterId+']').hide();
           $('.nb-cell[mtchapter='+chapterId+']').hide();
           $(this).find('img').first().hide();
@@ -274,18 +275,22 @@ function checkInterfaceConsistency () {
       } else if ($('.nb-cell[mtsection='+chapterId+']:visible').length) {
         defOps=defOps.concat(mtout[chapterId]);
       }
-      console.log(chapterId);
-      console.log(defOps);
-
     }
   });
 }
 
+function toggleCollapsGif(chapterId) {
+  let hnodeIcon=$('.nb-cell[mtheading='+chapterId+']').find('img').first();
+  hnodeIcon.attr('src',(hnodeIcon.attr('src')==expandGifUrl)?collapsGifUrl:expandGifUrl);
+}
+
 function toggleChapter(chapterId) {
+  toggleCollapsGif(chapterId)
   $('.nb-cell[mtchapter='+chapterId+']').toggle();
   checkInterfaceConsistency();
 }
 function toggleSection(chapterId) {
+  toggleCollapsGif(chapterId)
   $('.nb-cell[mtsection='+chapterId+']').toggle()
   checkInterfaceConsistency();
 }
