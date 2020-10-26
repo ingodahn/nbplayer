@@ -13,8 +13,7 @@ function makePlayer () {
 
   addSagecells(".nb-code-cell",".nb-input");
   makeSageCells(playerConfig);
-
-  chapterize();
+  if (playerConfig.collapsable) chapterize();
 }
 
 function makeMenu() {
@@ -85,7 +84,8 @@ let playerConfig={
   eval: false,
   hide: ["fullScreen"],
   execute: false,
-  showRead: true
+  showRead: true,
+  collapsable: false
 }
 
 $("#sageLang").change(function() {
@@ -102,6 +102,9 @@ $("#sageExecute").change(function() {
 });
 $("#sageShowRead").change(function() {
   playerConfig.showRead=($("#sageShowRead").is(':checked'))?true:false;
+});
+$("#collapsable").change(function() {
+  playerConfig.collapsable=($("#collapsable").is(':checked'))?true:false;
 });
 
 // Transferring input

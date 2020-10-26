@@ -1,5 +1,4 @@
-css/vendor/
-css/nbpreview.css
-css/notebook.css
-js/vendor/
+vendor/
 debug.log
+nbplayer.zip
+Output.html
