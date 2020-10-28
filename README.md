@@ -19,6 +19,8 @@ Create the intended view and save the file.
 
 `<span class="mathtrek" mtin=",-separated list of operators and variables that must be defined before code cells are executed" mtout=",-separated list of operators and variables that will be defined after code cells are executed">`
 
+A stylesheet `custom.css` in the same directory as the output html file can be used to style the output.
+
 ### Known Issues
 
 After saving the resulting html view, the page in the player is no longer functional. In order to generate an alternative view, the page must be reloaded.

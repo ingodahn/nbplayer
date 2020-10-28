@@ -18,6 +18,7 @@ function makePlayer () {
 
 function makeMenu() {
   var lang=getBrowserLanguage();
+  $('head').first().append('<link rel="stylesheet" href="custom.css"');
   // Add header lines
   var read=(lang == 'de')?'Lesen':'Read';
   var execute=(lang =='de')?'Ausführen':'Execute';
@@ -38,6 +39,7 @@ function makeMenu() {
 
 function saveHtml() {
   saveAddSageCells(".nb-code-cell",".sagecell_input,.sagecell_output");
+  $('script').html().replace(/\u200B/g,'');
   var blob = new Blob(['<!DOCTYPE html>\n<html>\n<head>'+
   $('head').html()+
   '</head>\n<body>\n<div id="main">'+
