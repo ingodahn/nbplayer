@@ -10,7 +10,7 @@ function makePlayer () {
   $('#footer').remove();
   makeMenu();
   if (! playerConfig.execute) playerConfig.showRead=true;
-
+  if (playerConfig.transferOut) makeTransferSave();
   addSagecells(".nb-code-cell",".nb-input");
   makeSageCells(playerConfig);
   if (playerConfig.collapsable) chapterize();
@@ -25,8 +25,9 @@ function makeMenu() {
   var switchMode = (lang == 'de')?'Code ausblenden/einblenden':'Show / Hide Code';
   var seq = (lang == 'de')?'Code-Zellen in der gegebenen Reihenfolge ausführen!':'Execute Cells in the Sequence Given!';
   var saver=(lang == 'de')?'Speichern':'Save';
+  var goSaveData=(lang == 'de')?'Daten speichern':'Save Data';
   var playerMenu=`<div id="navbar">
-  <a href="#" role="button" id="read-button" class="btn btn-primary" onclick="setView()">`+read+`</button>
+  <a href="#" role="button" id="read-button" class="btn btn-primary" onclick="setView()">`+read+`</a>
   <a href="#" role="button" id="execute-button" class="btn btn-primary" onclick="setExecute()">`+execute+`</a>
   <a href="#" role="button" class="btn btn-primary" onclick="toggleInput()">`+switchMode+`</a>
   <a href="#" role="button" class="btn btn-primary" onClick="saveHtml()">`+saver+`</a>
@@ -87,6 +88,7 @@ let playerConfig={
   hide: ["fullScreen"],
   execute: false,
   showRead: true,
+  transferOut: false,
   collapsable: false
 }
 
@@ -104,6 +106,9 @@ $("#sageExecute").change(function() {
 });
 $("#sageShowRead").change(function() {
   playerConfig.showRead=($("#sageShowRead").is(':checked'))?true:false;
+});
+$("#transferOut").change(function() {
+  playerConfig.transferOut=($("#transferOut").is(':checked'))?true:false;
 });
 $("#collapsable").change(function() {
   playerConfig.collapsable=($("#collapsable").is(':checked'))?true:false;
@@ -330,4 +335,26 @@ function toggleExpand(chapterId) {
   };
   let i=0;
   $('.'+chapter_id+'_heading').siblings('.'+chapterId).each(function() {})
+}
+
+// Saving Data State
+function makeTransferSave() {
+  if ($('.nbdata').length) {
+    let script='';
+    let nbOut=$('.nbdata').first().attr('nbout').split(',').map(x => x.trim());
+    for (let i=0; i< nbOut.length; i++) {
+      script += 'print("'+nbOut[i]+' =",'+nbOut[i]+')\n';
+    }
+    let cell = `
+  <h4>Execute this cell to save state</h4>
+  <div class='compute'>
+    <script type='text/x-sage'>`+script+`</script>
+  </div>
+  <a href="#" role="button" id="saveData-button" class="btn btn-primary" onclick="saveData()">`+goSaveData+`</a>`;
+    $('#main').append(cell);
+  }
+}
+
+function saveData() {
+  alert('Saving Data');
 }
