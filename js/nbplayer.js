@@ -10,8 +10,8 @@ function makePlayer () {
   $('#footer').remove();
   makeMenu();
   if (! playerConfig.execute) playerConfig.showRead=true;
-
   addSagecells(".nb-code-cell",".nb-input");
+  makeTransferData();
   makeSageCells(playerConfig);
   if (playerConfig.collapsable) chapterize();
 }
@@ -26,7 +26,7 @@ function makeMenu() {
   var seq = (lang == 'de')?'Code-Zellen in der gegebenen Reihenfolge ausführen!':'Execute Cells in the Sequence Given!';
   var saver=(lang == 'de')?'Speichern':'Save';
   var playerMenu=`<div id="navbar">
-  <a href="#" role="button" id="read-button" class="btn btn-primary" onclick="setView()">`+read+`</button>
+  <a href="#" role="button" id="read-button" class="btn btn-primary" onclick="setView()">`+read+`</a>
   <a href="#" role="button" id="execute-button" class="btn btn-primary" onclick="setExecute()">`+execute+`</a>
   <a href="#" role="button" class="btn btn-primary" onclick="toggleInput()">`+switchMode+`</a>
   <a href="#" role="button" class="btn btn-primary" onClick="saveHtml()">`+saver+`</a>
@@ -330,4 +330,15 @@ function toggleExpand(chapterId) {
   };
   let i=0;
   $('.'+chapter_id+'_heading').siblings('.'+chapterId).each(function() {})
+}
+
+function makeTransferData () {
+  $('.nbdata').parents('.nb-cell').each(function () {
+    let node=$(this);
+    node.before('<div class="transferData"></div>');
+    let rootNode=node.prev();
+    let codeCell=node.next();
+    node.appendTo(rootNode);
+    codeCell.appendTo(rootNode);
+  })
 }
