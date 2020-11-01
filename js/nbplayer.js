@@ -130,7 +130,8 @@ function saveAddSageCells(rootNode,delNode) {
     $(this).append(cell);
     // commenting out figure commands to avoid character graphics. Octave cells will show only the last graphics
     //scScript = $(this).find(inNode).text().replace(/figure/g,"% figure");
-    let scScript=getSageInput($(this))
+    let scScript=getSageInput($(this));
+    scScript=scScript.replace(/\n\n/g,"\n");
     $(this).find('.compute script').text(scScript);
     if (delNode) $(this).find(delNode).remove();
     $(this).find('.compute').hide();
@@ -151,6 +152,7 @@ function addSagecells(rootNode,inNode) {
     $(this).append(cell);
     // commenting out figure commands to avoid character graphics. Octave cells will show only the last graphics
     scScript = $(this).find(inNode).text().replace(/figure/g,"% figure");
+    scScript=scScript.replace(/\n\n/g,"\n");
     $(this).find('.compute script').text(scScript);
     $(this).find('.compute').hide();
   });
