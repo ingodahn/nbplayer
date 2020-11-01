@@ -29,7 +29,7 @@ function makeMenu() {
   <a href="#" role="button" id="read-button" class="btn btn-primary" onclick="setView()">`+read+`</a>
   <a href="#" role="button" id="execute-button" class="btn btn-primary" onclick="setExecute()">`+execute+`</a>
   <a href="#" role="button" class="btn btn-primary" onclick="toggleInput()">`+switchMode+`</a>
-  <a href="#" role="button" class="btn btn-primary" onClick="saveHtml()">`+saver+`</a>
+  <a href="#" role="button" class="btn btn-primary" onclick="saveHtml()">`+saver+`</a>
   <a id="evalWarning" href="#" role="button" class="btn btn-warning" style="display: none;">`+seq+`</a>
   <img src="https://netmath.vcrp.de/downloads/Systeme/css/images/netmath-logo.png" width="45px"
     style="float:right;"></img>
@@ -332,12 +332,52 @@ function toggleExpand(chapterId) {
 }
 
 function makeTransferData () {
-  $('.nbdata').parents('.nb-cell').each(function () {
+  $('.nbdataIn,.nbdataOut').parents('.nb-cell').each(function () {
     let node=$(this);
-    node.before('<div class="transferData"></div>');
+    node.before('<div id="transferData" class="transferData"></div>');
     let rootNode=node.prev();
     let codeCell=node.next();
     node.appendTo(rootNode);
     codeCell.appendTo(rootNode);
+    let msg="";
+    if (rootNode.find('.nbdataOut')) {
+      msg=(getBrowserLanguage()=='de')?"Status  in die Zwischenablage kopieren":"Copy status to clipboard";
+      rootNode.append('<p><input type="button" role="button" class="btn btn-primary" onclick="status2ClipBoard()" value="'+msg+'" /></p>')
+    }
   })
+}
+
+
+// Usage: copyToClipboard(string)
+const copyToClipboard = str => {
+  const el = document.createElement('textarea');
+  el.value = str;
+  el.setAttribute('readonly', '');
+  el.style.position = 'absolute';
+  el.style.left = '-9999px';
+  document.body.appendChild(el);
+  const selected =
+    document.getSelection().rangeCount > 0
+      ? document.getSelection().getRangeAt(0)
+      : false;
+  el.select();
+  document.execCommand('copy');
+  document.body.removeChild(el);
+  if (selected) {
+    document.getSelection().removeAllRanges();
+    document.getSelection().addRange(selected);
+  }
+};
+
+function status2ClipBoard () {
+  let status=$('.transferData .sagecell_stdout').first().text();
+  let lang=getBrowserLanguage(), msg="";
+  if ( ! status.length) {
+    msg=(lang == 'de')?"Fehler: Die Statusberechnung wurde noch nicht ausgeführt":"error: Status cell not yet executed";
+    alert(msg);
+  } else {
+    msg=(lang=='de')?"Status in die Zwischenablage kopiert":"Status copied to clipboard";
+    copyToClipboard(status);
+    alert(msg);
+  }
 }
