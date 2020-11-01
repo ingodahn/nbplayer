@@ -9,11 +9,11 @@ function makePlayer () {
   $('#controls').remove();
   $('#footer').remove();
   makeMenu();
-  if (! playerConfig.execute) playerConfig.showRead=true;
   addSagecells(".nb-code-cell",".nb-input");
   makeTransferData();
   makeSageCells(playerConfig);
   if (playerConfig.collapsable) chapterize();
+  if (playerConfig.execute) setExecute();
 }
 
 function makeMenu() {
@@ -340,7 +340,7 @@ function makeTransferData () {
     node.appendTo(rootNode);
     codeCell.appendTo(rootNode);
     let msg="";
-    if (rootNode.find('.nbdataOut')) {
+    if (rootNode.find('.nbdataOut').length) {
       msg=(getBrowserLanguage()=='de')?"Status  in die Zwischenablage kopieren":"Copy status to clipboard";
       rootNode.append('<p><input type="button" role="button" class="btn btn-primary" onclick="status2ClipBoard()" value="'+msg+'" /></p>')
     }
