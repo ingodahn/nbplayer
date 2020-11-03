@@ -373,7 +373,7 @@ function status2ClipBoard () {
   let status=$('.transferData .sagecell_stdout').first().text();
   let lang=getBrowserLanguage(), msg="";
   if ( ! status.length) {
-    msg=(lang == 'de')?"Fehler: Die Statusberechnung wurde noch nicht ausgeführt":"error: Status cell not yet executed";
+    msg=(lang == 'de')?"Fehler: Die Statusberechnung wurde noch nicht ausgeführt":"Error: Status cell not yet executed";
     alert(msg);
   } else {
     msg=(lang=='de')?"Status in die Zwischenablage kopiert":"Status copied to clipboard";
