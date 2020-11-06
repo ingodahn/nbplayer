@@ -345,7 +345,6 @@ function makeTransferData () {
       let lang=getBrowserLanguage();
       msg=(lang=='de')?"Status  in die Zwischenablage kopieren":"Copy status to clipboard";
       rootNode.append('<p><input type="button" role="button" class="btn btn-primary" onclick="status2ClipBoard()" value="'+msg+'" /></p>');
-      /*
       let nSucc=rootNode.find('.successor').length;
       if (nSucc) {
         let contMsg=(lang == 'de')?'Weiterlesen:':'Continue reading:';
@@ -358,10 +357,9 @@ function makeTransferData () {
           $(this).find('a').attr('href',url);
           let msgB=(lang == 'de')?"Mit aktuellem Status öffnen":"Open with current status";
           $(this).appendTo(ulNode);
-          $(this).append(' <input type="button" role="button" class="btn btn-primary" onclick="openWithStatus(\''+url+'\')" value="'+msgB+'" />');
+          //$(this).append(' <input type="button" role="button" class="btn btn-primary" onclick="openWithStatus(\''+url+'\')" value="'+msgB+'" />');
         })
       }
-      */
     }
   })
 }
