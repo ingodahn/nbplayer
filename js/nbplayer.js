@@ -55,6 +55,7 @@ function saveHtml() {
     mtin=`+JSON.stringify(mtin)+`;
     mtout=`+JSON.stringify(mtout)+`;
     makeMenu();
+    loadStatus();
     makeSageCells(playerConfig);
     launchPlayer();
   </script>
@@ -341,8 +342,16 @@ function makeTransferData () {
     codeCell.appendTo(rootNode);
     let msg="";
     if (rootNode.find('.nbdataOut').length) {
-      msg=(getBrowserLanguage()=='de')?"Status  in die Zwischenablage kopieren":"Copy status to clipboard";
-      rootNode.append('<p><input type="button" role="button" class="btn btn-primary" onclick="status2ClipBoard()" value="'+msg+'" /></p>')
+      let lang=getBrowserLanguage();
+      msg=(lang=='de')?"Status  in die Zwischenablage kopieren":"Copy status to clipboard";
+      rootNode.append('<p><input type="button" role="button" class="btn btn-primary" onclick="status2ClipBoard()" value="'+msg+'" /></p>');
+      rootNode.find('li a').each(function() {
+        let url=$(this).attr('href');
+        url=url.replace('ipynb','html');
+        $(this).attr('href',url);
+        let msgB=(lang == 'de')?"Mit aktuellem Status öffnen":"Open with current data";
+        $(this).after(' <input type="button" role="button" class="btn btn-primary" onclick="openWithStatus(\''+url+'\')" value="'+msgB+'" />');
+      })
     }
   })
 }
@@ -369,6 +378,20 @@ const copyToClipboard = str => {
   }
 };
 
+function getStatus() {
+  return status=$('.transferData .sagecell_stdout').first().text();
+}
+
+function openWithStatus(url) {
+  let status=getStatus();
+  if (status.length) {
+    window.open(url+'?status='+encodeURIComponent(status),'_blank');
+  } else {
+    let lang=getBrowserLanguage(), msg="";
+    msg=(lang == 'de')?"Fehler: Die Statusberechnung wurde noch nicht ausgeführt":"Error: Status cell not yet executed";
+    alert(msg);
+  }
+}
 function status2ClipBoard () {
   let status=$('.transferData .sagecell_stdout').first().text();
   let lang=getBrowserLanguage(), msg="";
@@ -379,5 +402,27 @@ function status2ClipBoard () {
     msg=(lang=='de')?"Status in die Zwischenablage kopiert":"Status copied to clipboard";
     copyToClipboard(status);
     alert(msg);
+  }
+}
+
+// Reading status parameter and entering it into .nbDataIn
+function GetURLParameterWithDefault(sParam, dValue) {
+  var sPageURL = window.location.search.substring(1);
+  var sURLVariables = sPageURL.split('&');
+  for (var i = 0; i < sURLVariables.length; i++)
+  {
+      var sParameterName = sURLVariables[i].split('=');
+      if (sParameterName[0] == sParam)
+      {
+          return decodeURIComponent(sParameterName[1]);
+      }
+  };
+  return dValue;
+};
+
+function loadStatus () {
+  let status=GetURLParameterWithDefault('status','');
+  if (status.length & $('.transferData').find('.nbdataIn').length) {
+    $('.transferData .nb-code-cell script').html(status+'\nprint("Status restored")');
   }
 }
