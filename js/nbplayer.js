@@ -55,6 +55,7 @@ function saveHtml() {
     mtin=`+JSON.stringify(mtin)+`;
     mtout=`+JSON.stringify(mtout)+`;
     makeMenu();
+    localize();
     loadStatus();
     makeSageCells(playerConfig);
     launchPlayer();
@@ -343,21 +344,18 @@ function makeTransferData () {
     let msg="";
     if (rootNode.find('.nbdataOut').length) {
       let lang=getBrowserLanguage();
-      msg=(lang=='de')?"Status  in die Zwischenablage kopieren":"Copy status to clipboard";
-      rootNode.append('<p><input type="button" role="button" class="btn btn-primary" onclick="status2ClipBoard()" value="'+msg+'" /></p>');
+      rootNode.append('<p><input type="button" role="button" class="btn btn-primary continueButton" onclick="status2ClipBoard()" value="Copy status to clipboard" /></p>');
       let nSucc=rootNode.find('.successor').length;
       if (nSucc) {
-        let contMsg=(lang == 'de')?'Weiterlesen:':'Continue reading:';
-        rootNode.append('<p>'+contMsg+'</p>');
+        rootNode.append('<p id="contMsg">Continue reading:</p>');
         rootNode.append('<ul></ul>');
         let ulNode=rootNode.children().last();
         rootNode.find('.successor').each(function() {
           let url=$(this).find('a').first().attr('href');
           url=url.replace('ipynb','html');
           $(this).find('a').attr('href',url);
-          let msgB=(lang == 'de')?"Mit aktuellem Status öffnen":"Open with current status";
           $(this).appendTo(ulNode);
-          //$(this).append(' <input type="button" role="button" class="btn btn-primary" onclick="openWithStatus(\''+url+'\')" value="'+msgB+'" />');
+          $(this).append(' <input type="button" role="button" class="btn btn-primary openWithStatus" onclick="openWithStatus(\''+url+'?status=true\')" value="Open with current status" />');
         })
       }
     }
@@ -393,7 +391,8 @@ function getStatus() {
 function openWithStatus(url) {
   let status=getStatus();
   if (status.length) {
-    window.open(url+'?status='+encodeURIComponent(status),'_blank');
+    localStorage.setItem('mtStatus',status);
+    window.open(url,'_blank');
   } else {
     let lang=getBrowserLanguage(), msg="";
     msg=(lang == 'de')?"Fehler: Die Statusberechnung wurde noch nicht ausgeführt":"Error: Status cell not yet executed";
@@ -429,8 +428,45 @@ function GetURLParameterWithDefault(sParam, dValue) {
 };
 
 function loadStatus () {
-  let status=GetURLParameterWithDefault('status','');
-  if (status.length & $('.transferData').find('.nbdataIn').length) {
-    $('.transferData .nb-code-cell script').html(status+'\nprint("Status restored")');
+  if(GetURLParameterWithDefault('status',false)) {
+    let status=localStorage.getItem('mtStatus');
+    if (status) {
+      if ($('.transferData').find('.nbdataIn').length) {
+        $('.transferData .nb-code-cell script').html(status+'\nprint("Status restored")');
+      }
+    }
+  }
+}
+
+// localisation of nb-specific UI elements on startup
+function localize () {
+  let translations = {
+    ".continueButton" : {
+      'type' : 'value',
+      'de' : "Status  in die Zwischenablage kopieren",
+      'en' : "Copy status to clipboard"
+    },
+    "#contMsg" : {
+      'type' : 'html',
+      'de' : 'Weiterlesen:',
+      'en' : 'Continue reading:'
+    },
+    '.openWithStatus' : {
+      'type' : 'value',
+      'de' : "Mit aktuellem Status öffnen",
+      'en': "Open with current status"
+    }
+  };
+  let lang=getBrowserLanguage();
+  let trans=Object.keys(translations);
+  for (let i=0;i<trans.length;i++) {
+    let sel=trans[i];
+    if (translations[sel][lang]) {
+      if (translations[sel]['type'] == 'html') {
+        $(sel).html(translations[sel][lang]);
+      } else {
+        $(sel).attr(translations[sel]['type'],translations[sel][lang]);
+      }
+    }
   }
 }
