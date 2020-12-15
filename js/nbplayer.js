@@ -53,8 +53,8 @@ function saveHtml() {
   `</div>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://sagecell.sagemath.org/embedded_sagecell.js"></script>
-  <script src="./vendor/js/FileSaver.min.js"></script>
-  <script src="./js/nbplayer.js"></script>
+  <script src="https://dahn-research.eu/nbplayer/vendor/js/FileSaver.min.js"></script>
+  <script src="https://dahn-research.eu/nbplayer/js/nbplayer.js"></script>
   <script>
     playerConfig=`+JSON.stringify(playerConfig)+`;
     playerMode=`+JSON.stringify(playerMode)+`;
