@@ -15,6 +15,8 @@ Open index.html in the project folder. Make the required player settings for the
 
 Create the intended view and save the file.
 
+To support Expanding/Collapsing of sections, call the page with parameter level=expert.
+
 ***Note:*** Select Expanding/Collapsing of Sections only if your notebook has aside of all h3 nodes metadata of the following form
 
 `<span class="mathtrek" mtin=",-separated list of operators and variables that must be defined before code cells are executed" mtout=",-separated list of operators and variables that will be defined after code cells are executed">`
