@@ -35,11 +35,13 @@
                         </select>
                     </label>
                     <br/>
-                    <input type="checkbox" id="sageLinked" checked>
-                    <label for="showSage">All cells use same environment</label>
-                    <br/>
-                    <input type="checkbox" id="sageEval">
-                    <label for="sageEval">Cells are automatically evaluated</label>
+                    <label>Cells:
+                        <select id="sageCellsType">
+                            <option value="linked" selected>All linked in same environment</option>
+                            <option value="auto">Automatic Evaluation</option>
+                            <option value="single">Neither linked nor autoevaluated</option>
+                        </select>
+                    </label>
                     <br/>
                     <input type="checkbox" id="sageExecute" checked>
                     <label for="sageExecute">Start player in execution mode</label>
@@ -47,11 +49,10 @@
                     <input type="checkbox" id="sageShowRead" checked>
                     <label for="sageShowRead">Enable readonly mode in addition to execution mode</label>
                     <br/>
-                    <input type="checkbox" id="transferOut">
-                    <label for="transferOut">Save output variables for reuse</label>
-                    <br/>
-                    <input type="checkbox" id="collapsable">
-                    <label for="collapsable">Enable collapsing/expanding of sections</label>
+                    <span class="expertMode">
+                        <input type="checkbox" id="collapsable">
+                        <label for="collapsable">Enable collapsing/expanding of sections</label>
+                    </span>
                     <br/>
                 </p>
                 <input type="file" id="file">

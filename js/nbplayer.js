@@ -95,27 +95,39 @@ let playerConfig={
   hide: ["fullScreen"],
   execute: true,
   showRead: true,
-  transferOut: false,
   collapsable: false
 }
+
+if (GetURLParameterWithDefault('level','user') != 'expert') $('.expertMode').hide();
 
 $("#sageLang").change(function() {
   playerConfig.lang=$("#sageLang").val();
 });
-$("#sageLinked").change(function() {
-  playerConfig.linked=($("#sageLinked").is(':checked'))?true:false;
-});
-$("#sageEval").change(function() {
-  playerConfig.eval=($("#sageEval").is(':checked'))?true:false;
+$("#sageCellsType").change(function() {
+  let cellType=$('#sageCellsType option').filter(':selected').val();
+  switch (cellType) {
+    case 'auto': {
+      playerConfig.linked=false;
+      playerConfig.eval=true;
+      break;
+    }
+    case 'single': {
+      playerConfig.linked=false;
+      playerConfig.eval=false;
+      break;
+    }
+    default: {
+      playerConfig.linked=true;
+      playerConfig.eval=false;
+    }
+  }
+  console.log(playerConfig);
 });
 $("#sageExecute").change(function() {
   playerConfig.execute=($("#sageExecute").is(':checked'))?true:false;
 });
 $("#sageShowRead").change(function() {
   playerConfig.showRead=($("#sageShowRead").is(':checked'))?true:false;
-});
-$("#transferOut").change(function() {
-  playerConfig.transferOut=($("#transferOut").is(':checked'))?true:false;
 });
 $("#collapsable").change(function() {
   playerConfig.collapsable=($("#collapsable").is(':checked'))?true:false;
