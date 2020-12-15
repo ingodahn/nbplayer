@@ -93,7 +93,7 @@ let playerConfig={
   linked: true,
   eval: false,
   hide: ["fullScreen"],
-  execute: false,
+  execute: true,
   showRead: true,
   transferOut: false,
   collapsable: false
