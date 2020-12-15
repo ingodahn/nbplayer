@@ -4,19 +4,19 @@
         <title>nbplayer — Jupyter Notebook Player</title>
         <meta charset="utf-8">
         <meta name="viewport" content="initial-scale=1">
-        <script src="https://dahn-research.eu/nbplayer/vendor/js/vendor/es5-shim.min.js"></script>
-        <script src="https://dahn-research.eu/nbplayer/vendor/js/vendor/marked.min.js"></script>
-        <script src="https://dahn-research.eu/nbplayer/vendor/js/vendor/purify.min.js"></script>
-        <script src="https://dahn-research.eu/nbplayer/vendor/js/vendor/ansi_up.min.js"></script>
-        <script src="https://dahn-research.eu/nbplayer/vendor/js/vendor/prism.min.js"></script>
-        <script src="https://dahn-research.eu/nbplayer/vendor/js/vendor/katex.min.js"></script>
-        <script src="https://dahn-research.eu/nbplayer/vendor/js/vendor/katex-auto-render.min.js"></script>
-        <script src="https://dahn-research.eu/nbplayer/vendor/js/vendor/notebook.min.js"></script>
-        <link rel="stylesheet" href="https://dahn-research.eu/nbplayer/vendor/css/vendor/katex.min.css" />
-        <link rel="stylesheet" href="https://dahn-research.eu/nbplayer/vendor/css/vendor/prism.css" />
-        <link rel="stylesheet" href="https://dahn-research.eu/nbplayer/vendor/css/notebook.css" />
-        <link rel="stylesheet" href="https://dahn-research.eu/nbplayer/vendor/css/nbpreview.css" />
-        <link rel="stylesheet" href="https://dahn-research.eu/nbplayer/css/nbplayer.css" />
+        <script src="./vendor/js/vendor/es5-shim.min.js"></script>
+        <script src="./vendor/js/vendor/marked.min.js"></script>
+        <script src="./vendor/js/vendor/purify.min.js"></script>
+        <script src="./vendor/js/vendor/ansi_up.min.js"></script>
+        <script src="./vendor/js/vendor/prism.min.js"></script>
+        <script src="./vendor/js/vendor/katex.min.js"></script>
+        <script src="./vendor/js/vendor/katex-auto-render.min.js"></script>
+        <script src="./vendor/js/vendor/notebook.min.js"></script>
+        <link rel="stylesheet" href="./vendor/css/vendor/katex.min.css" />
+        <link rel="stylesheet" href="./vendor/css/vendor/prism.css" />
+        <link rel="stylesheet" href="./vendor/css/notebook.css" />
+        <link rel="stylesheet" href="./vendor/css/nbpreview.css" />
+        <link rel="stylesheet" href="./css/nbplayer.css" />
         <link rel="stylesheet" href="custom.css" />
 
     </head>
@@ -46,6 +46,9 @@
                     <br/>
                     <input type="checkbox" id="sageShowRead" checked>
                     <label for="sageShowRead">Enable readonly mode in addition to execution mode</label>
+                    <br/>
+                    <input type="checkbox" id="transferOut">
+                    <label for="transferOut">Save output variables for reuse</label>
                     <br/>
                     <input type="checkbox" id="collapsable">
                     <label for="collapsable">Enable collapsing/expanding of sections</label>
