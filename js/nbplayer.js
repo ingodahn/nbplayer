@@ -20,7 +20,11 @@ function makePlayer () {
 
 
 
-if (GetURLParameterWithDefault('level','user') != 'expert') $('.expertMode').hide();
+if (GetURLParameterWithDefault('level','user') != 'expert') {
+  $('.expertMode').hide();
+} else {
+  $('.noExpertMode').hide();
+}
 
 $("#sageLang").change(function() {
   playerConfig.lang=$("#sageLang").val();
