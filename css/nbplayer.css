@@ -172,3 +172,7 @@ fieldset[disabled] .btn-warning.focus {
 .sticky + .content {
   padding-top: 60px;
 }
+
+#controls {
+  background-color: powderblue;
+}
