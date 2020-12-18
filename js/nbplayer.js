@@ -47,18 +47,17 @@ $("#sageCellsType").change(function() {
       playerConfig.eval=false;
     }
   }
-  console.log(playerConfig);
-});
-$("#sageExecute").change(function() {
-  playerConfig.execute=($("#sageExecute").is(':checked'))?true:false;
-});
-$("#sageShowRead").change(function() {
-  playerConfig.showRead=($("#sageShowRead").is(':checked'))?true:false;
 });
 $("#collapsable").change(function() {
   playerConfig.collapsable=($("#collapsable").is(':checked'))?true:false;
 });
-
+$("#playerPanes").change(function() {
+  var panes=$("#playerPanes option").filter(':selected').val();
+  playerConfig.panes=panes;
+  playerConfig.execute=(panes=="ReadExec")?false:true;
+  playerConfig.showRead=(panes == "Exec")?false:true;
+  console.log(playerConfig);
+})
 /* addSageCells(
  * rootNode: Selector for node to which cell will be appended - codeCell
  * inNode: Selector for node from which script is taken - cellInput
