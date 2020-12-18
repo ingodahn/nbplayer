@@ -15,16 +15,18 @@ function makeMenu() {
   var seq = (lang == 'de')?'Code-Zellen in der gegebenen Reihenfolge ausführen!':'Execute Cells in the Sequence Given!';
   var saver=(lang == 'de')?'Speichern':'Save';
   var goSaveData=(lang == 'de')?'Daten speichern':'Save Data';
-  var playerMenu=`<div id="navbar">
-  <a href="#" role="button" id="read-button" class="btn btn-primary" onclick="setView()">`+read+`</a>
-  <a href="#" role="button" id="execute-button" class="btn btn-primary" onclick="setExecute()">`+execute+`</a>
-  <a href="#" role="button" class="btn btn-primary" onclick="toggleInput()">`+switchMode+`</a>
+  var readButton='<a href="#" role="button" id="read-button" class="btn btn-primary" onclick="setView()">'+read+'</a>';
+  var executeButton='<a href="#" role="button" id="execute-button" class="btn btn-primary" onclick="setExecute()">'+execute+'</a>';
+  var paneButtons=(playerConfig.panes == 'Exec')?"":readButton+executeButton;
+  var playerMenu='<div id="navbar">'+paneButtons+
+  `<a href="#" role="button" class="btn btn-primary" onclick="toggleInput()">`+switchMode+`</a>
   <a href="#" role="button" class="btn btn-primary" onclick="saveHtml()">`+saver+`</a>
   <a id="evalWarning" href="#" role="button" class="btn btn-warning" style="display: none;">`+seq+`</a>
   <img src="https://netmath.vcrp.de/downloads/Systeme/css/images/netmath-logo.png" width="45px"
     style="float:right;"></img>
   </div>`;
   $('body').prepend(playerMenu);
+
 }
 
 // Sticky navbar
@@ -102,6 +104,7 @@ function saveAddSageCells(rootNode,delNode) {
 
 //Configuring Player
 let playerConfig={
+  panes: "ExecRead",
   lang: "sage",
   linked: true,
   eval: false,
@@ -126,7 +129,7 @@ function getSageInput(rootNode) {
 // Views
 //Switching input on/off
 let playerMode={
-  showSage: false,
+  showSage: false, //true if execute mode on startup
   showNotebookInput: true,
   showSageInput: true
 };

@@ -45,16 +45,15 @@
                         </select>
                     </label>
                     <br/>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="sageExecute" checked>
-                        <label class="form-check-label" for="sageExecute">Start player in execution mode</label>
-                    </div>
-
-                    <br/>
-                    <input type="checkbox" id="sageShowRead" checked>
-                    <label for="sageShowRead">Enable readonly mode in addition to execution mode</label>
-                    <br/>
+                    <label>Player Modes:
+                        <select class="form-select form-select-sm" id="playerPanes">
+                            <option value="ExecRead" selected>Start in Execution Mode</option>
+                            <option value="ReadExec">Start in Read Mode</option>
+                            <option value="Exec">Execution Mode Only</option>
+                        </select>
+                    </label>
                     <span class="expertMode">
+                        <br/>
                         <input type="checkbox" id="collapsable">
                         <label for="collapsable">Enable collapsing/expanding of sections</label>
                     </span>
