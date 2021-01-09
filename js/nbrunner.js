@@ -72,6 +72,10 @@ function saveHtml() {
   </script>
   </body></html>`], {type: "text/plain;charset=utf-8"});
   saveAs(blob, "Output.html");
+  let saveWarnMsg='Do NOT use this page anymore - open your saved copy or reload this page.';
+  var lang=getBrowserLanguage();
+  if (lang == 'de') saveWarnMsg='Bitte die Seite neu laden oder die gespeicherte Kopie öffnen.';
+  $('#navbar').html('<div class="save-warning">'+saveWarnMsg+'</div>');
 }
 
 function makeSageCells(pC) {
