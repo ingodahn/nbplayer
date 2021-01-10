@@ -4,10 +4,9 @@ Notebook-Player is a tool to convert Jupyter notebooks into dynamic HTML pages u
 
 ## Installation
 
-Copy the following into the repository folder.
-* FileSaver.min.js and nbpreview.js from the respective GitHub repository into vendor/js
-* nbpreview.css and notebook.css from the nbpreview repo into the folder vendor/css
-* The folder js and css from the nbpreview repo into nbplayer/vendor
+*** Local: *** Clone this repo and launch index.html
+
+*** On Server: *** Checkout branch release, replace installation path in index.html, js/nbrunner.js, nbplayer.js - minify those files.
 
 ## Usage
 
