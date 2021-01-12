@@ -8,6 +8,7 @@ function getBrowserLanguage() {
 function makeMenu() {
   var lang=getBrowserLanguage();
   $('head').first().append('<link rel="stylesheet" href="custom.css"');
+  $('body').first().append('<script src="custom.js"></script>');
   // Add header lines
   var read=(lang == 'de')?'Lesen':'Read';
   var execute=(lang =='de')?'Ausführen':'Execute';
@@ -22,7 +23,7 @@ function makeMenu() {
   `<a href="#" role="button" class="btn btn-primary" onclick="toggleInput()">`+switchMode+`</a>
   <a href="#" role="button" class="btn btn-primary" onclick="saveHtml()">`+saver+`</a>
   <a id="evalWarning" href="#" role="button" class="btn btn-warning" style="display: none;">`+seq+`</a>
-  <img src="https://netmath.vcrp.de/downloads/Systeme/css/images/netmath-logo.png" width="45px"
+  <img src="`+playerConfig.playerPath+`/resources/logo.png" width="45px"
     style="float:right;"></img>
   </div>`;
   $('body').prepend(playerMenu);
@@ -57,8 +58,9 @@ function saveHtml() {
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://sagecell.sagemath.org/embedded_sagecell.js"></script>
-  <script src="./vendor/js/FileSaver.min.js"></script>
-  <script src="./js/nbrunner.min.js"></script>
+  <script src="`+playerConfig.playerPath+`/vendor/js/FileSaver.min.js"></script>
+  <script src="`+playerConfig.playerPath+`/nbplayerConfig.js"></script>
+  <script src="`+playerConfig.playerPath+`/js/nbrunner.min.js"></script>
   <script>
     playerConfig=`+JSON.stringify(playerConfig)+`;
     playerMode=`+JSON.stringify(playerMode)+`;
@@ -71,7 +73,7 @@ function saveHtml() {
     launchPlayer();
   </script>
   </body></html>`], {type: "text/plain;charset=utf-8"});
-  saveAs(blob, "Output.html");
+  saveAs(blob, playerConfig.name+".html");
   let saveWarnMsg='Do NOT use this page anymore - open your saved copy or reload this page.';
   var lang=getBrowserLanguage();
   if (lang == 'de') saveWarnMsg='Bitte die Seite neu laden oder die gespeicherte Kopie öffnen.';
@@ -115,7 +117,8 @@ let playerConfig={
   hide: ["fullScreen"],
   execute: true,
   showRead: true,
-  collapsable: false
+  collapsable: false,
+  playerPath: playerPath
 }
 
 // Transferring input
