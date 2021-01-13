@@ -6,7 +6,9 @@ Notebook-Player is a tool to convert Jupyter notebooks into dynamic HTML pages u
 
 *** Local: *** Clone this repo and launch index.html
 
-*** On Server: *** Checkout branch release, replace installation path in index.html, js/nbrunner.js, nbplayer.js - minify those files.
+*** On Server: *** Clone this repo on server. Edit nbplayerConfig.js, replacing `'.'` with the URL of your installation
+
+Replace `resources/logo.png` if you want another logo.
 
 ## Usage
 
@@ -14,29 +16,15 @@ Open index.html in the project folder. Make the required player settings for the
 
 Create the intended view and save the file.
 
-To support Expanding/Collapsing of sections, call the page with parameter level=expert.
-
-***Note:*** Select Expanding/Collapsing of Sections only if your notebook has aside of all h3 nodes metadata of the following form
-
-`<span class="mathtrek" mtin=",-separated list of operators and variables that must be defined before code cells are executed" mtout=",-separated list of operators and variables that will be defined after code cells are executed">`
-
-A stylesheet `custom.css` in the same directory as the output html file can be used to style the output.
+A stylesheet `custom.css` and a Javascript file `custom.js` in the same directory as the output html file can be used to modify the output further.
 
 ## Input and Output Cells
 
-Input and output cell make it possible to transfer data from one notebook player to another.
+As linked SageCells must be evaluated one after another, it is recommended to split notebooks with many code cells into a set of smaller notebooks.
 
-### Output Cells
+Input and output cells make it possible to transfer basic data from one notebook player file to another.
 
-Output cells have a markdown cell, giving some explanations, and a code cell printing the commands to instantiate key variables with their current values. Note that only literal values, no objects or plots, can be saved.
-
-Output markdown cells must have a node of the form `<span class="nbdataOut"></span>` This node may contain a node `<ul></ul>` with child nodes `<li class="successor"><a>...</a></li>` where the `<a></a>` node links to a notebook with an input cell using these variables.
-
-### Input Cells
-
-Input cells have a markdown cell, giving some explanations, and a code cell executing the commands to instantiate key variables with specific values.
-
-Input markdown cells must contain a node `<span class="nbdataIn"></span>`.
+See explanation on `index.html` and in the included sample notebbok `Sample.ipynb`.
 
 ### Known Issues
 

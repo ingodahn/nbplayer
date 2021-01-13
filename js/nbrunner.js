@@ -64,8 +64,6 @@ function saveHtml() {
   <script>
     playerConfig=`+JSON.stringify(playerConfig)+`;
     playerMode=`+JSON.stringify(playerMode)+`;
-    mtin=`+JSON.stringify(mtin)+`;
-    mtout=`+JSON.stringify(mtout)+`;
     makeMenu();
     localize();
     loadStatus();
@@ -180,13 +178,14 @@ function toggleInput () {
 function makeTransferData () {
   $('.nbdataIn,.nbdataOut').parents('.nb-cell').each(function () {
     let node=$(this);
-    node.before('<div id="transferData" class="transferData"></div>');
+    node.before('<div class="transferData"></div>');
     let rootNode=node.prev();
     let codeCell=node.next();
     node.appendTo(rootNode);
     codeCell.appendTo(rootNode);
     let msg="";
     if (rootNode.find('.nbdataOut').length) {
+      rootNode.attr('id','transferDataOut');
       let lang=getBrowserLanguage();
       rootNode.append('<p><input type="button" role="button" class="btn btn-primary continueButton" onclick="status2ClipBoard()" value="Copy status to clipboard" /></p>');
       let nSucc=rootNode.find('.successor').length;
@@ -205,6 +204,8 @@ function makeTransferData () {
           $(this).append(' <input type="button" role="button" class="btn btn-primary openWithStatus" onclick="openWithStatus(\''+url+'?status=true\')" value="Open with current status" />');
         })
       }
+    } else {
+      rootNode.attr('id','transferDataIn');
     }
   })
 }
@@ -231,7 +232,7 @@ const copyToClipboard = str => {
 };
 
 function getStatus() {
-  return status=$('.transferData .sagecell_stdout').first().text();
+  return $('#transferDataOut .sagecell_stdout').first().text();;
 }
 
 function openWithStatus(url) {
@@ -246,7 +247,7 @@ function openWithStatus(url) {
   }
 }
 function status2ClipBoard () {
-  let status=$('.transferData .sagecell_stdout').first().text();
+  let status=getStatus();
   let lang=getBrowserLanguage(), msg="";
   if ( ! status.length) {
     msg=(lang == 'de')?"Fehler: Die Statusberechnung wurde noch nicht ausgeführt":"Error: Status cell not yet executed";
@@ -318,49 +319,4 @@ function localize () {
       }
     }
   }
-}
-
-// Toggling of chapters
-var expandGifUrl="./resources/expand.gif";
-var collapsGifUrl="./resources/collapse.gif";
-
-function checkInterfaceConsistency () {
-  let defOps=[];
-  $('.nb-cell[mtheading]').each(function () {
-    let chapterId=$(this).attr('mtheading');
-    if (chapterId in mtin) {
-      let inar=mtin[chapterId];
-      for (let i=0; i<inar.length;i++) {
-        if (inar[i] != "" & !defOps.includes(inar[i])) {
-          $('.nb-cell[mtsection='+chapterId+']').hide();
-          $('.nb-cell[mtchapter='+chapterId+']').hide();
-          $(this).find('img').first().hide();
-        } else {
-          $(this).find('img').first().show();
-        }
-      }
-
-      if ($('.nb-cell[mtchapter='+chapterId+']:visible').length) {
-          defOps=defOps.concat(mtout[chapterId]);
-      } else if ($('.nb-cell[mtsection='+chapterId+']:visible').length) {
-        defOps=defOps.concat(mtout[chapterId]);
-      }
-    }
-  });
-}
-
-function toggleCollapsGif(chapterId) {
-  let hnodeIcon=$('.nb-cell[mtheading='+chapterId+']').find('img').first();
-  hnodeIcon.attr('src',(hnodeIcon.attr('src')==expandGifUrl)?collapsGifUrl:expandGifUrl);
-}
-
-function toggleChapter(chapterId) {
-  toggleCollapsGif(chapterId)
-  $('.nb-cell[mtchapter='+chapterId+']').toggle();
-  checkInterfaceConsistency();
-}
-function toggleSection(chapterId) {
-  toggleCollapsGif(chapterId)
-  $('.nb-cell[mtsection='+chapterId+']').toggle()
-  checkInterfaceConsistency();
 }

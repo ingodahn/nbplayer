@@ -25,7 +25,7 @@
     <body>
         <div id="main">
             <div class= "blue-gradient" id="controls">
-                <div id="header">Jupyter Notebook Player Settings <a class="noExpertMode" href="./help.html" target="_blank">Help</a><a class="expertMode" href="./help.html?level=expert" target="_blank">Help</a></div>
+                <div id="header">Jupyter Notebook Player Settings <a href="./help.html" target="_blank">Help</a></div>
                 <p>
                     <label>Kernel:
                         <select class="form-select form-select-sm" id="sageLang">
@@ -52,17 +52,34 @@
                             <option value="Exec">Execution Mode Only</option>
                         </select>
                     </label>
-                    <span class="expertMode">
-                        <br/>
-                        <input type="checkbox" id="collapsable">
-                        <label for="collapsable">Enable collapsing/expanding of sections</label>
-                    </span>
-                    <br/>
                 </p>
                 <input type="file" class="form-control-file" id="file" accept=".ipynb">
             </div>
+            <div id="help">
+                <h2>About Notebook Player</h2>
+                <p>Notebook-Player is a tool to convert Jupyter notebooks into dynamic HTML pages using <a href="https://sagecell.sagemath.org/" target="_blank">SageCell</a>.</p>
+                <h3 id="usage">Usage</h3>
+                <p>Make the required player settings for the web page to be generated and load the Jupyter notebook file.</p>
+                <p>Create the intended view and save the file.</p>
+                <p>A stylesheet <code>custom.css</code> and Javascript file <code>custom.js</code> in the same directory as the output html file can be used to improve the output.</p>
+                <h4 id="input-and-output-cells">Input and Output Cells</h4>
+                <p>Input and output cell make it possible to transfer data from one notebook player document to another. Each notebook must contain at most one input and at most one output cell.</p>
+                <h4 id="output-cells">Output Cells</h4>
+                <p>Output cells have a markdown cell, giving some explanations, and a code cell printing the commands to instantiate key variables with their current values. Note that only literal values, no objects or plots, can be saved.</p>
+                <p>Output markdown cells must have a node of the form <code>&lt;span class=&quot;nbdataOut&quot;&gt;&lt;/span&gt;</code> This node may contain a node <code>&lt;ul&gt;&lt;/ul&gt;</code> with child nodes <code>&lt;li class=&quot;successor&quot;&gt;&lt;a&gt;...&lt;/a&gt;&lt;/li&gt;</code> where the <code>&lt;a&gt;&lt;/a&gt;</code> node links to a notebook with an input cell using these variables.</p>
+                <h4 id="input-cells">Input Cells</h4>
+                <p>Input cells have a markdown cell, giving some explanations, and a code cell executing the commands to instantiate key variables with specific values.</p>
+                <p>Input markdown cells must contain a node <code>&lt;span class=&quot;nbdataIn&quot;&gt;&lt;/span&gt;</code>.</p>
+                <p><a href="Sample.ipynb">Here</a> you can download a sample notebook with an input and an output cell.</p>
+
+                <h3 id="known-issues">Known Issues</h3>
+                <p>After saving the resulting html view, the page in the player is no longer functional. In order to generate an alternative view, the page must be reloaded.</p>
+            </div>
             <div id="notebook-holder"></div>
+
+
             <div id="footer">
+                &copy; 2021 Ingo Dahn, License: <a href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank">CC-BY-SA</a><br/>
                 This page uses <i>nbpreview</i> - see </i><a href="https://github.com/jsvine/nbpreview"><code>nbpreview</code> code on GitHub</a>.
             </div>
         </div>

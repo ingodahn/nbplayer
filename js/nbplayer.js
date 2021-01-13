@@ -39,25 +39,16 @@ function makePlayer () {
     $(this).remove();
   }
 });
+  $('script[src="http://www.google-analytics.com/ga.js"]').remove();
   $('#controls').remove();
+  $('#help').remove();
   $('#footer').remove();
   makeMenu();
   addSagecells(".nb-code-cell",".nb-input");
   makeTransferData();
   makeSageCells(playerConfig);
   absolutize();
-  if (playerConfig.collapsable) chapterize();
   if (playerConfig.execute) setExecute();
-}
-
-
-
-
-
-if (GetURLParameterWithDefault('level','user') != 'expert') {
-  $('.expertMode').hide();
-} else {
-  $('.noExpertMode').hide();
 }
 
 $("#sageLang").change(function() {
@@ -84,9 +75,7 @@ $("#sageCellsType").change(function() {
   }
   document.cookie="sageCellsType="+cellType;
 });
-$("#collapsable").change(function() {
-  playerConfig.collapsable=($("#collapsable").is(':checked'))?true:false;
-});
+
 $("#playerPanes").change(function() {
   var panes=$("#playerPanes option").filter(':selected').val();
   playerConfig.panes=panes;
@@ -114,83 +103,6 @@ function addSagecells(rootNode,inNode) {
   });
 }
 
-// Personalization
-// Preparation
-var mtin={},mtout={};
-
-
-function chapterize() {
-  let curCnt2=0, curCnt3=0,curId2,curId3;
-  $('.nb-worksheet').children().each(function () {
-    let node=$(this);
-    if (node.find('h2').length) {
-      let heading=node.find('h2').first();
-      //let headline=heading.html();
-      curCnt2++;
-      curCnt3=0;
-      curId2="chapter_"+curCnt2;
-      node.attr('mtheading',curId2);
-      getInterface(node,curId2);
-      heading.append('<img src="./resources/collapse.gif" onclick= "toggleChapter(\''+curId2+'\')">');
-    } else if (node.find('h3').length) {
-      let heading=node.find('h3').first();
-      curCnt3++;
-      curId3=curId2+"_"+curCnt3;
-      node.attr('mtheading',curId3);
-      node.attr('mtchapter',curId2);
-      getInterface(node,curId3);
-      heading.append('<img src="./resources/collapse.gif" onclick= "toggleSection(\''+curId3+'\')">');
-    } else {
-      node.attr('mtchapter',curId2);
-      node.attr('mtsection',curId3);
-    }
-  });
-  checkInterfaceConsistency();
-}
-
-function getInterface(node,chapterId) {
-  if (node.find('.mathtrek').length) {
-    let mt=node.find('.mathtrek').first();
-    mtin[chapterId]=mt.attr('mtin').split(',').map(x => x.trim());
-    mtout[chapterId]=mt.attr('mtout').split(',').map(x => x.trim());
-  }
-}
-
-
-var definedOps=[];
-
-function isDefined(chapterId) {
-  let inar=mtin[chapterId];
-  for (let i=0;i<inar.length;i++) {
-    if (inar[i] != "" & !definedOps.includes(inar[i])) return false;
-  }
-  return true;
-}
-
-function checkExpandable(chapterId) {
-  let node=$('.'+chapterId+'_heading img').last().first()
-  if (isDefined(chapterId)) {
-    node.show();
-  } else {
-    node.hide();
-  }
-}
-
-function toggleExpand(chapterId) {
-  if ($('.'+chapterId).is(":visible").length) {
-    // The chapter is expanded
-    let cout=mtout[chapterId]
-    $('.'+chapterId).hide();
-    definedOps=definedOps.filter(function(op) {
-      return (!cout.includes(op));
-    })
-  } else {
-    $('.'+chapterId).show();
-    definedOps.concat(mtout[chapterId]);
-  };
-  let i=0;
-  $('.'+chapter_id+'_heading').siblings('.'+chapterId).each(function() {})
-}
 
 function absolutize () {
   $('script').each(function () {
