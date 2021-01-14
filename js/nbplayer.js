@@ -40,6 +40,7 @@ function makePlayer () {
   }
 });
   $('script[src="http://www.google-analytics.com/ga.js"]').remove();
+  $('#welcome').remove();
   $('#controls').remove();
   $('#help').remove();
   $('#footer').remove();
