@@ -8,6 +8,7 @@ function getBrowserLanguage() {
 function makeMenu() {
   var lang=getBrowserLanguage();
   $('head').first().append('<link rel="stylesheet" href="custom.css"');
+  $('body').first().append('<script src="custom.js"></script>');
   // Add header lines
   var read=(lang == 'de')?'Lesen':'Read';
   var execute=(lang =='de')?'Ausführen':'Execute';
@@ -22,7 +23,7 @@ function makeMenu() {
   `<a href="#" role="button" class="btn btn-primary" onclick="toggleInput()">`+switchMode+`</a>
   <a href="#" role="button" class="btn btn-primary" onclick="saveHtml()">`+saver+`</a>
   <a id="evalWarning" href="#" role="button" class="btn btn-warning" style="display: none;">`+seq+`</a>
-  <img src="https://netmath.vcrp.de/downloads/Systeme/css/images/netmath-logo.png" width="45px"
+  <img src="`+playerConfig.playerPath+`/resources/logo.png" width="45px"
     style="float:right;"></img>
   </div>`;
   $('body').prepend(playerMenu);
@@ -57,13 +58,12 @@ function saveHtml() {
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://sagecell.sagemath.org/embedded_sagecell.js"></script>
-  <script src="https://dahn-research.eu/nbplayer/vendor/js/FileSaver.min.js"></script>
-  <script src="https://dahn-research.eu/nbplayer/js/nbrunner.min.js"></script>
+  <script src="`+playerConfig.playerPath+`/vendor/js/FileSaver.min.js"></script>
+  <script src="`+playerConfig.playerPath+`/nbplayerConfig.js"></script>
+  <script src="`+playerConfig.playerPath+`/js/nbrunner.min.js"></script>
   <script>
     playerConfig=`+JSON.stringify(playerConfig)+`;
     playerMode=`+JSON.stringify(playerMode)+`;
-    mtin=`+JSON.stringify(mtin)+`;
-    mtout=`+JSON.stringify(mtout)+`;
     makeMenu();
     localize();
     loadStatus();
@@ -71,7 +71,7 @@ function saveHtml() {
     launchPlayer();
   </script>
   </body></html>`], {type: "text/plain;charset=utf-8"});
-  saveAs(blob, "Output.html");
+  saveAs(blob, playerConfig.name+".html");
   let saveWarnMsg='Do NOT use this page anymore - open your saved copy or reload this page.';
   var lang=getBrowserLanguage();
   if (lang == 'de') saveWarnMsg='Bitte die Seite neu laden oder die gespeicherte Kopie öffnen.';
@@ -115,7 +115,8 @@ let playerConfig={
   hide: ["fullScreen"],
   execute: true,
   showRead: true,
-  collapsable: false
+  collapsable: false,
+  playerPath: playerPath
 }
 
 // Transferring input
@@ -177,13 +178,14 @@ function toggleInput () {
 function makeTransferData () {
   $('.nbdataIn,.nbdataOut').parents('.nb-cell').each(function () {
     let node=$(this);
-    node.before('<div id="transferData" class="transferData"></div>');
+    node.before('<div class="transferData"></div>');
     let rootNode=node.prev();
     let codeCell=node.next();
     node.appendTo(rootNode);
     codeCell.appendTo(rootNode);
     let msg="";
     if (rootNode.find('.nbdataOut').length) {
+      rootNode.attr('id','transferDataOut');
       let lang=getBrowserLanguage();
       rootNode.append('<p><input type="button" role="button" class="btn btn-primary continueButton" onclick="status2ClipBoard()" value="Copy status to clipboard" /></p>');
       let nSucc=rootNode.find('.successor').length;
@@ -202,6 +204,8 @@ function makeTransferData () {
           $(this).append(' <input type="button" role="button" class="btn btn-primary openWithStatus" onclick="openWithStatus(\''+url+'?status=true\')" value="Open with current status" />');
         })
       }
+    } else {
+      rootNode.attr('id','transferDataIn');
     }
   })
 }
@@ -228,7 +232,7 @@ const copyToClipboard = str => {
 };
 
 function getStatus() {
-  return status=$('.transferData .sagecell_stdout').first().text();
+  return $('#transferDataOut .sagecell_stdout').first().text();;
 }
 
 function openWithStatus(url) {
@@ -243,7 +247,7 @@ function openWithStatus(url) {
   }
 }
 function status2ClipBoard () {
-  let status=$('.transferData .sagecell_stdout').first().text();
+  let status=getStatus();
   let lang=getBrowserLanguage(), msg="";
   if ( ! status.length) {
     msg=(lang == 'de')?"Fehler: Die Statusberechnung wurde noch nicht ausgeführt":"Error: Status cell not yet executed";
@@ -315,49 +319,4 @@ function localize () {
       }
     }
   }
-}
-
-// Toggling of chapters
-var expandGifUrl="./resources/expand.gif";
-var collapsGifUrl="./resources/collapse.gif";
-
-function checkInterfaceConsistency () {
-  let defOps=[];
-  $('.nb-cell[mtheading]').each(function () {
-    let chapterId=$(this).attr('mtheading');
-    if (chapterId in mtin) {
-      let inar=mtin[chapterId];
-      for (let i=0; i<inar.length;i++) {
-        if (inar[i] != "" & !defOps.includes(inar[i])) {
-          $('.nb-cell[mtsection='+chapterId+']').hide();
-          $('.nb-cell[mtchapter='+chapterId+']').hide();
-          $(this).find('img').first().hide();
-        } else {
-          $(this).find('img').first().show();
-        }
-      }
-
-      if ($('.nb-cell[mtchapter='+chapterId+']:visible').length) {
-          defOps=defOps.concat(mtout[chapterId]);
-      } else if ($('.nb-cell[mtsection='+chapterId+']:visible').length) {
-        defOps=defOps.concat(mtout[chapterId]);
-      }
-    }
-  });
-}
-
-function toggleCollapsGif(chapterId) {
-  let hnodeIcon=$('.nb-cell[mtheading='+chapterId+']').find('img').first();
-  hnodeIcon.attr('src',(hnodeIcon.attr('src')==expandGifUrl)?collapsGifUrl:expandGifUrl);
-}
-
-function toggleChapter(chapterId) {
-  toggleCollapsGif(chapterId)
-  $('.nb-cell[mtchapter='+chapterId+']').toggle();
-  checkInterfaceConsistency();
-}
-function toggleSection(chapterId) {
-  toggleCollapsGif(chapterId)
-  $('.nb-cell[mtsection='+chapterId+']').toggle()
-  checkInterfaceConsistency();
 }
