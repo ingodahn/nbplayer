@@ -4,12 +4,15 @@
     var $holder = document.querySelector("#notebook-holder");
 
     var render_notebook = function (ipynb) {
+		// ID: Deactivating sanitization
+		nb.sanitizer = function (x) { return x; };
         var notebook = root.notebook = nb.parse(ipynb);
         while ($holder.hasChildNodes()) {
             $holder.removeChild($holder.lastChild);
         }
         $holder.appendChild(notebook.render());
         Prism.highlightAll();
+		// ID: Go to Notebook Player
 		makePlayer();
     };
 
