@@ -155,6 +155,9 @@ fieldset[disabled] .btn-warning.focus {
 #main {
   padding: 16px;
 }
+#main.belowMenu {
+  margin-top: 50px;
+}
 /* The sticky class is added to the navbar with JS when it reaches its scroll position */
 .sticky {
   position: fixed;

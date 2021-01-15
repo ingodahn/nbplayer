@@ -27,7 +27,7 @@ function makeMenu() {
     style="float:right;"></img>
   </div>`;
   $('body').prepend(playerMenu);
-
+  $('#main').addClass('belowMenu');
 }
 
 // Sticky navbar
