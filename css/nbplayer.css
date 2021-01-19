@@ -189,3 +189,11 @@ fieldset[disabled] .btn-warning.focus {
 #controls {
   background-color: powderblue;
 }
+
+.transferData {
+	border-style: outset;
+	border-color: green;
+	border-radius: 5px;
+	padding: 1em;
+	margin: 1em;
+}
