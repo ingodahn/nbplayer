@@ -66,6 +66,7 @@ function saveHtml() {
     playerMode=`+JSON.stringify(playerMode)+`;
     makeMenu();
     localize();
+    loadStatus();
     makeSageCells(playerConfig);
     launchPlayer();
   </script>
@@ -186,7 +187,7 @@ function makeTransferData () {
     if (rootNode.find('.nbdataOut').length) {
       rootNode.attr('id','transferDataOut');
       let lang=getBrowserLanguage();
-      rootNode.append('<p><input type="button" role="button" class="btn btn-primary status2Clipboard" onclick="status2ClipBoard()" value="Copy status to clipboard" /></p>');
+      rootNode.append('<br/><p><input type="button" role="button" class="btn btn-primary status2Clipboard" onclick="status2ClipBoard()" value="Copy status to clipboard" /></p>');
       rootNode.append('<p><input type="button" role="button" class="btn btn-primary status2Storage" onclick="status2Storage()" value="Save status" /></p>');
       let nSucc=rootNode.find('.successor').length;
       if (nSucc) {
@@ -206,7 +207,6 @@ function makeTransferData () {
       }
     } else {
       rootNode.attr('id','transferDataIn');
-      rootNode.append('<p><input type="button" role="button" class="btn btn-primary loadStatus" onclick="loadStatus()" value="Load status" /></p>');
     }
   })
 }
@@ -262,13 +262,17 @@ function status2ClipBoard () {
 }
 
 function status2Storage () {
+  let statusId=GetURLParameterWithDefault('status',false);
+  //For backwards compatibility:
+  if ((!statusId) || (statusId.toString() == 'true')) statusId='mtStatus';
+  if (statusId.toString() == "true") statusId='mtStatus';
   let status=getStatus();
   let lang=getBrowserLanguage(), msg="";
   if ( ! status.length) {
     msg=(lang == 'de')?"Fehler: Die Statusberechnung wurde noch nicht ausgeführt":"Error: Status cell not yet executed";
     alert(msg);
   } else {
-    localStorage.setItem('mtStatus',status);
+    localStorage.setItem(statusId,status);
     msg=(lang=='de')?"Status gespeichert":"Status saved";
     alert(msg);
   }
@@ -290,19 +294,23 @@ function GetURLParameterWithDefault(sParam, dValue) {
 };
 
 function loadStatus () {
-  let status=localStorage.getItem('mtStatus');
-  if (status) {
-    $('.transferData').each(function () {
-      let transferNode=$(this);
-      if (transferNode.find('.nbdataIn').length) {
-        transferNode.append('<div class="compute" type="text/x-sage"><script>'+status+'</script></div>');
-        /*
-        transferNode.find('.nb-code-cell script').html(status+'\nprint("Status restored")');
-        */
-      }
-    });
-  } else {
-    alert("No status available");
+  let statusId=GetURLParameterWithDefault('status',false);
+  if(statusId) {
+    //For backwards compatibility:
+  if (statusId.toString() == 'true') statusId='mtStatus';
+    console.log('statusId: '+statusId);
+    let status=localStorage.getItem(statusId);
+    if (status) {
+      console.log('status found');
+      $('.transferData').each(function () {
+        let transferNode=$(this);
+        console.log('transferData found');
+        if (transferNode.find('.nbdataIn').length) {
+          console.log('transferring data');
+          transferNode.find('.nb-code-cell script').html(status+'\nprint("Status restored")');
+        }
+      });
+    }
   }
 }
 
