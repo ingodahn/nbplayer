@@ -20,7 +20,7 @@ A stylesheet `custom.css` and a Javascript file `custom.js` in the same director
 
 ## Input and Output Cells
 
-As linked SageCells must be evaluated one after another, it is recommended to split notebooks with many code cells into a set of smaller notebooks.
+As linked SageCells must be evaluated one after another, it is recommended to split notebooks with many code cells into a set of smaller notebooks. These pages can be brought together again with the [Notebook Site](https://github.com/ingodahn/nbsite) software.
 
 Input and output cells make it possible to transfer basic data from one notebook player file to another.
 
