@@ -2,6 +2,10 @@
 
 Notebook-Player is a tool to convert Jupyter notebooks into dynamic HTML pages using SageCell.
 
+## Online Instance
+
+There is an [instance of Notebook Player online](https://dahn-research.eu/nbplayer), provided for free conversion of Jupyter notebooks.
+
 ## Installation
 
 *** Local: *** Clone this repo and launch index.html
