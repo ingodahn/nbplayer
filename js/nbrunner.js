@@ -298,15 +298,11 @@ function loadStatus () {
   if(statusId) {
     //For backwards compatibility:
   if (statusId.toString() == 'true') statusId='mtStatus';
-    console.log('statusId: '+statusId);
     let status=localStorage.getItem(statusId);
     if (status) {
-      console.log('status found');
       $('.transferData').each(function () {
         let transferNode=$(this);
-        console.log('transferData found');
         if (transferNode.find('.nbdataIn').length) {
-          console.log('transferring data');
           transferNode.find('.nb-code-cell script').html(status+'\nprint("Status restored")');
         }
       });
