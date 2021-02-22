@@ -161,6 +161,10 @@ function setExecute () {
     $(cellInput).hide();
     $(cellOutput).hide();
     $(".compute").show();
+    console.log(playerMode.showSageInput);
+    if (!playerMode.showSageInput) {
+      $(".compute .sagecell_input").hide();
+    }
     playerMode.showSage = true;
     $('#evalWarning').show();
 }
