@@ -6,7 +6,7 @@ function getBrowserLanguage() {
 }
 
 function makeMenu() {
-  var lang=getBrowserLanguage();
+  var lang = getBrowserLanguage();
   $('head').first().append('<link rel="stylesheet" href="custom.css"');
   $('body').first().append('<script src="custom.js"></script>');
   // Add header lines
@@ -18,11 +18,12 @@ function makeMenu() {
   var goSaveData=(lang == 'de')?'Daten speichern':'Save Data';
   var readButton='<a href="#" role="button" id="read-button" class="btn btn-primary" onclick="setView()">'+read+'</a>';
   var executeButton='<a href="#" role="button" id="execute-button" class="btn btn-primary" onclick="setExecute()">'+execute+'</a>';
-  var paneButtons=(playerConfig.panes == 'Exec')?"":readButton+executeButton;
+  var paneButtons = (playerConfig.panes == 'Exec') ? "" : readButton + executeButton;
+  var evalWarning = (playerConfig.linked) ? '<a id="evalWarning" href="#" role="button" class="btn btn-warning" style="display: none;">'+seq+'</a>' : '';
   var playerMenu='<div id="navbar">'+paneButtons+
   `<a href="#" role="button" class="btn btn-primary" onclick="toggleInput()">`+switchMode+`</a>
-  <a href="#" role="button" class="btn btn-primary" onclick="saveHtml()">`+saver+`</a>
-  <a id="evalWarning" href="#" role="button" class="btn btn-warning" style="display: none;">`+seq+`</a>
+  <a href="#" role="button" class="btn btn-primary" onclick="saveHtml()">`+ saver + `</a>` +
+  evalWarning +`
   <img src="`+playerConfig.playerPath+`/resources/logo.png" width="45px"
     style="float:right;"></img>
   </div>`;
